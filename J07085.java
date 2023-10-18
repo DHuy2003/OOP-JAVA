@@ -1,27 +1,37 @@
 import java.io.IOException;
-import java.io.DataInputStream;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class J07085 {
-    public static void main(String[] args) throws IOException {
+    public static String Zero(String s){
+        int i = 0;
+        while(i < s.length() && s.charAt(i) =='0') i++;
+        s =s.substring(i);
+        return s;
+    }
+    public static long Sum(String s){
+        long sum = 0;
+        for(int i = 0; i < s.length(); i++){
+            sum += (s.charAt(i) - '0');
+        }
+        return sum;
+    }
+    public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream file = new FileInputStream("DATA.in");
-        DataInputStream reader = new DataInputStream(file);
-        while(reader.available() > 0){
-            String data = reader.toString();
+        ObjectInputStream read = new ObjectInputStream(file);
+        @SuppressWarnings("unchecked")
+        ArrayList<String> list = (ArrayList<String>) read.readObject();
+        for(String s : list){
             String tmp = "";
-            for(int i = 0; i < data.length(); i++){
-                if(Character.isDigit(data.charAt(i))){
-                    tmp += data.charAt(i);
+            for(int i = 0; i < s.length(); i++){
+                if(Character.isDigit(s.charAt(i))){
+                    tmp += (s.charAt(i) + "");
                 }
             }
-            long sum = 0;
-            String ans = "";
-            for(int i = 0; i < tmp.length(); i++){
-                sum += (tmp.charAt(i) - '0');
-                if(sum > 0) ans += tmp.charAt(i);
-            }
-            System.out.println(ans + " " + sum); 
+            System.out.println(Zero(tmp) + " " + Sum(tmp));
         }
-        reader.close();
+        read.close();
     }
 }
